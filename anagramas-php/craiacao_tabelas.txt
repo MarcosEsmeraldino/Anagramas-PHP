@@ -1,0 +1,10 @@
+CREATE TABLE anagramas (
+	id int(11) NOT NULL,
+	palavra varchar(255) NOT NULL,
+	criacao datetime,
+	modificacao datetime
+);
+
+ALTER TABLE anagramas ADD PRIMARY KEY (id);
+  
+ALTER TABLE anagramas MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
