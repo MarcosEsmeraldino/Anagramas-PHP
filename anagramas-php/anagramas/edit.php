@@ -1,46 +1,54 @@
 <?php 
-  require_once('functions.php'); 
-  edit();
+
+include_once('../config.php');
+include_once('../dao/AnagramaDAO.php');
+include_once('../model/Anagrama.php');
+
+if (isset($_GET['id'])) {
+
+  $id = $_GET['id'];
+  $dao = new AnagramaDAO();
+
+  if (isset($_POST['palavra'])) {
+
+    $palavra = $_POST['palavra'];
+    $criacao = $_POST['criacao'];
+    $modificacao = date('Y-m-d H:i:s');
+
+    $anagrama = new Anagrama();
+    $anagrama->setId($id);
+    $anagrama->setCriacao($criacao);
+    $anagrama->setModificacao($modificacao);
+    $anagrama->setPalavra($palavra);
+
+    $dao->update($anagrama);
+    header('location: index.php');
+
+  } else {
+    global $anagrama;
+    $anagrama = $dao->getById($id);
+  } 
+} else {
+  header('location: index.php');
+}
+
 ?>
 
 <?php include(HEADER_TEMPLATE); ?>
 
 <h2>Atualizar Cliente</h2>
 
-<form action="edit.php?id=<?php echo $usuario['id']; ?>" method="post">
+<form action="edit.php?id=<?php echo $anagrama->getId(); ?>" method="post">
   <hr />
   <div class="row">
     <div class="form-group col-md-7">
-      <label for="name">Nome</label>
-      <input type="text" class="form-control" name="usuario['nome']" value="<?php echo $usuario['nome']; ?>">
+      <label for="name">Palavra</label>
+      <input type="text" class="form-control" name="palavra" value="<?php echo $anagrama->getPalavra(); ?>">
     </div>
-
-    <div class="form-group col-md-3">
-      <label for="campo2">CPF</label>
-      <input type="text" class="form-control" name="usuario['cpf']" value="<?php echo $usuario['cpf']; ?>">
-    </div>
-
-    <div class="form-group col-md-2">
-      <label for="campo3">Cidade</label>
-      <input type="text" class="form-control" name="usuario['cidade']" value="<?php echo $usuario['cidade']; ?>">
-    </div>
-  </div>
-  <div class="row">
-    <div class="form-group col-md-5">
-      <label for="campo1">Estado</label>
-      <input type="text" class="form-control" name="usuario['estado']" value="<?php echo $usuario['estado']; ?>">
-    </div>
-
-    <div class="form-group col-md-3">
-      <label for="campo2">Telefone</label>
-      <input type="text" class="form-control" name="usuario['telefone']" value="<?php echo $usuario['telefone']; ?>">
-    </div>
-
-    
-
   </div>
   <div id="actions" class="row">
     <div class="col-md-12">
+      <input type="hidden" name="criacao" value="<?php echo $anagrama->getCriacao(); ?>">
       <button type="submit" class="btn btn-primary">Salvar</button>
       <a href="index.php" class="btn btn-default">Cancelar</a>
     </div>

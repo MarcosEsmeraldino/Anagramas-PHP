@@ -1,10 +1,15 @@
-<?php 
-	include_once('functions.php');
-	include_once('../dao/AnagramaDAO.php');
-	include_once('../model/Anagrama.php');
-	//view($_GET['id']);
+<?php
+
+include_once('../config.php');
+include_once('../dao/AnagramaDAO.php');
+include_once('../model/Anagrama.php');
+
+if (!empty($_GET['id'])) {
 	$dao = new AnagramaDAO();
+	global $anagrama;
 	$anagrama = $dao->getById($_GET['id']);
+}
+
 ?>
 
 <?php include(HEADER_TEMPLATE); ?>
@@ -21,7 +26,12 @@
 	<dd><?php echo $anagrama->getPalavra(); ?></dd>
 </dl>
 
-
+<dl class="dl-horizontal">
+	<dt>Anagramas:</dt>
+	<dd>
+		<?php echo implode(", ", $anagrama->getAnagramas()); ?>
+	</dd>
+</dl>
 
 <div id="actions" class="row">
 	<div class="col-md-12">

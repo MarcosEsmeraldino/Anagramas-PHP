@@ -1,7 +1,13 @@
 <?php
-	include_once('functions.php');
-	include_once('../dao/AnagramaDAO.php');
-	include_once('../model/Anagrama.php');
+
+include_once('../config.php');
+include_once('../dao/AnagramaDAO.php');
+include_once('../model/Anagrama.php');
+
+global $anagramas;
+$dao = new AnagramaDAO();
+$anagramas = $dao->getAll();
+
 ?>
 
 <?php include(HEADER_TEMPLATE); ?>
@@ -39,11 +45,6 @@
 </thead>
 <tbody>
 
-<?php 
-$dao = new AnagramaDAO();
-$anagramas = $dao->getAll();
-?>
-
 <?php if ($anagramas) : ?>
 
 <?php foreach ($anagramas as $anagrama) : ?>
@@ -56,7 +57,7 @@ $anagramas = $dao->getAll();
 		<td class="actions text-right">
 			<a href="view.php?id=<?php echo $anagrama->getId(); ?>" class="btn btn-sm btn-success"><i class="fa fa-eye"></i> Visualizar</a>
 			<a href="edit.php?id=<?php echo $anagrama->getId(); ?>" class="btn btn-sm btn-warning"><i class="fa fa-pencil"></i> Editar</a>
-			<a href="#" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#delete-modal" data-anagrama="<?php echo $anagrama->getId(); ?>">
+			<a href="#" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#delete-modal" data-usuario="<?php echo $anagrama->getId(); ?>">
 				<i class="fa fa-trash"></i> Excluir</a>
 		</td>
 	</tr>
@@ -71,4 +72,5 @@ $anagramas = $dao->getAll();
 </table>
 
 <?php include('modal.php'); ?>
+
 <?php include(FOOTER_TEMPLATE); ?>

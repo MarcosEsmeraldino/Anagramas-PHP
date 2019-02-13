@@ -1,7 +1,7 @@
 <?php
 
-include_once('model/Anagrama.php');
-include_once('config.php');
+include_once('../model/Anagrama.php');
+include_once('../config.php');
 
 class AnagramaDAO {
 
@@ -36,15 +36,16 @@ class AnagramaDAO {
         $stmt = $this->conn->prepare("SELECT * FROM anagramas WHERE id=:id");
         $stmt->execute(['id' => $id]);
 
-        $row = $stmt->fetch(PDO::FETCH_OBJ);
+        if($row = $stmt->fetch(PDO::FETCH_OBJ)) {
 
-        $a = new Anagrama();
-        $a->setId($row->id);
-        $a->setPalavra($row->palavra);
-        $a->setCriacao($row->criacao);
-        $a->setModificacao($row->modificacao);
+            $a = new Anagrama();
+            $a->setId($row->id);
+            $a->setPalavra($row->palavra);
+            $a->setCriacao($row->criacao);
+            $a->setModificacao($row->modificacao);
 
-        return $a;
+            return $a;
+        }
     }
 
     public function getAll() {
@@ -75,17 +76,15 @@ class AnagramaDAO {
     public function update(Anagrama $anagrama) {
         $this->conn->beginTransaction();
 
-        $DT = new DateTime();
-        $anagrama->setModificacao($DT);
-
         try {
             $stmt = $this->conn->prepare(
-                'UPDATE anagramas SET (palavra, criacao, modificacao) VALUES (:palavra, :criacao, :modificacao)'
+                'UPDATE anagramas SET palavra = :palavra, criacao = :criacao, modificacao = :modificacao WHERE id=:id'
             );
 
             $stmt->bindValue(':palavra', $anagrama->getPalavra());
             $stmt->bindValue(':criacao', $anagrama->getCriacao());
             $stmt->bindValue(':modificacao', $anagrama->getModificacao());
+            $stmt->bindValue(':id', $anagrama->getId());
             $stmt->execute();
 
             $this->conn->commit();
@@ -96,17 +95,13 @@ class AnagramaDAO {
     }
 
     public function delete($id) {
-        $this->conn->beginTransaction();
-
         try {
             $stmt = $this->conn->prepare(
                 'DELETE FROM anagramas WHERE id=:id'
             );
 
-            $stmt->bindValue(':id', $id);
+            $stmt->bindParam(':id', $id); 
             $stmt->execute();
-
-            $this->conn->commit();
         }
         catch(Exception $e) {
             $this->conn->rollback();

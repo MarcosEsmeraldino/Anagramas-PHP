@@ -1,6 +1,25 @@
 <?php 
-  require_once('functions.php'); 
-  add();
+
+include_once('../config.php');
+include_once('../dao/AnagramaDAO.php');
+include_once('../model/Anagrama.php');
+
+if (!empty($_POST['palavra'])) {
+
+  $palavra = $_POST['palavra'];
+  $criacao = date('Y-m-d H:i:s');
+  $modificacao = "";
+
+  $anagrama = new Anagrama();
+  $anagrama->setPalavra($palavra);
+  $anagrama->setCriacao($criacao);
+
+  $dao = new AnagramaDAO();
+  $dao->insert($anagrama);
+
+  header('location: index.php');
+}
+
 ?>
 
 <?php include(HEADER_TEMPLATE); ?>

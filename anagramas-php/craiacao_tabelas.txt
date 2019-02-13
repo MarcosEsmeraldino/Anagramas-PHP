@@ -1,8 +1,8 @@
 CREATE TABLE anagramas (
 	id int(11) NOT NULL,
 	palavra varchar(255) NOT NULL,
-	criacao datetime,
-	modificacao datetime
+	criacao varchar(255) NOT NULL,
+	modificacao varchar(255)
 );
 
 ALTER TABLE anagramas ADD PRIMARY KEY (id);
